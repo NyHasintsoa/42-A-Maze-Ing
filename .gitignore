@@ -1,0 +1,15 @@
+### Project ###
+**/*.txt
+!**/requirements.txt
+!config.txt
+**/__pycache__
+**/.mypy_cache
+.venv
+.ipynb_checkpoints
+lib/*
+dist/*
+**/mazegen-1.0.0-py3-none-any.whl
+output.txt
+
+### VS Code ###
+.vscode/

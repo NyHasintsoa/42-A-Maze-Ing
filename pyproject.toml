@@ -1,0 +1,14 @@
+[project]
+name = "mazegen"
+version = "1.0.0"
+description = "A standalone generic Maze Generator"
+authors = [
+    { name = "nramalan", email = "nramalan@student.42antananarivo.mg" }
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]

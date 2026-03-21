@@ -1,21 +1,16 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  __init__.py                                       :+:      :+:    :+:    #
+#  args_exception.py                                 :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/03/21 21:44:12 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/21 22:35:48 by nramalan        ###   ########.fr        #
+#  Created: 2026/03/21 21:28:07 by nramalan        #+#    #+#               #
+#  Updated: 2026/03/21 22:32:17 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from src.exception.args_exception import ArgsException
-from src.exception.config_exception import ConfigException
-from src.exception.maze_exception import MazeException
 
-__all__ = [
-    "ArgsException",
-    "ConfigException",
-    "MazeException"
-]
+class ArgsException(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)

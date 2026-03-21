@@ -1,16 +1,16 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  ConfigParser.py                                   :+:      :+:    :+:    #
+#  maze_generator.py                                 :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/03/21 21:31:32 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/21 21:31:45 by nramalan        ###   ########.fr        #
+#  Created: 2026/03/21 19:43:16 by nramalan        #+#    #+#               #
+#  Updated: 2026/03/21 22:33:03 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 
-class ConfigParser:
+class MazeGenerator:
     def __init__(self) -> None:
         pass

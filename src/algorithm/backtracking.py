@@ -1,16 +1,18 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  MazeResolver.py                                   :+:      :+:    :+:    #
+#  backtracking.py                                   :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/03/21 21:48:39 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/21 21:49:29 by nramalan        ###   ########.fr        #
+#  Created: 2026/03/21 21:34:28 by nramalan        #+#    #+#               #
+#  Updated: 2026/03/21 22:32:27 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
+from src.algorithm import AlgorithmGenerator
 
-class MazeResolver:
-    def __init__(self) -> None:
-        pass
+
+class Backtracking(AlgorithmGenerator):
+    def generate(self, value: int) -> None:
+        print(value)

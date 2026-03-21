@@ -1,16 +1,16 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  Backtracking.py                                   :+:      :+:    :+:    #
+#  config_parser.py                                  :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/03/21 21:34:28 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/21 21:34:40 by nramalan        ###   ########.fr        #
+#  Created: 2026/03/21 21:31:32 by nramalan        #+#    #+#               #
+#  Updated: 2026/03/21 22:32:40 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 
-class Backtracking:
+class ConfigParser:
     def __init__(self) -> None:
         pass

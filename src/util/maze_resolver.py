@@ -1,16 +1,16 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  ConfigException.py                                :+:      :+:    :+:    #
+#  maze_resolver.py                                  :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/03/21 21:27:44 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/21 21:30:12 by nramalan        ###   ########.fr        #
+#  Created: 2026/03/21 21:48:39 by nramalan        #+#    #+#               #
+#  Updated: 2026/03/21 22:32:49 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 
-class ConfigException(Exception):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)
+class MazeResolver:
+    def __init__(self) -> None:
+        pass

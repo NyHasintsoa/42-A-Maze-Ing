@@ -8,13 +8,14 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/17 00:07:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/23 21:33:54 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/23 21:56:28 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 
 import sys
 from src.exception import ArgsException, ConfigException
+from src.algorithm import Prim
 from src.service.config_parser import ConfigParser, Config
 from src.service import MlxWindow
 
@@ -30,6 +31,8 @@ def main() -> None:
     mlx_window.add_event()
     mlx_window.render()
     mlx_window.close_window()
+    algo = Prim(config, mlx_window.get_mlx_var())
+    print(f"algo = {algo.init_maze()}")
 
 
 if __name__ == "__main__":

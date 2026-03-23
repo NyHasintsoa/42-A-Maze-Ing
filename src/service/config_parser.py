@@ -6,13 +6,13 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 21:31:32 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/23 19:59:58 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/23 22:28:17 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 
 from src.exception import ConfigException
-from typing import Dict, Tuple, Any
+from typing import Dict, Tuple, Any, List
 from enum import Enum
 
 
@@ -32,6 +32,48 @@ class Config:
         self.perfect: bool = True
         self.animation: bool = False
         self.seed: int = 0
+        self.colors: List[Dict[int, int]] = [
+            {
+                0: 0xFF1E1E2E,  # empty -> Dark Blue/Black background (Base)
+                1: 0xFF45475A,  # wall -> Soft Grey/Blue (Surface)
+                2: 0xFFF9E2AF,  # ft symbol -> Gold/Yellow (Accent principal)
+                3: 0xFFA6E3A1,  # start -> Soft Green
+                4: 0xFFF38BA8,  # end -> Soft Red
+                5: 0xFFFFFFFF   # path -> White
+            },
+            {
+                0: 0xFFF5F5F7,  # empty -> White
+                1: 0xFFD1D1D6,  # wall -> Gray
+                2: 0xFFFF9500,  # ft symbol -> Orange
+                3: 0xFF34C759,  # start -> Green
+                4: 0xFFFF3B30,  # end -> Red
+                5: 0xFF1C1C1E   # path -> black
+            },
+            {
+                0: 0xFF0F380F,  # empty -> Dark Green
+                1: 0xFF306230,  # wall -> Green
+                2: 0xFF8BAC0F,  # ft symbol -> Accent Green
+                3: 0xFFFFFFFF,  # start -> White
+                4: 0xFF000000,  # end -> Black
+                5: 0xFF9BBC0F   # path -> Green
+            },
+            {
+                0: 0xFF001F3F,  # empty -> Dark Blue
+                1: 0xFF3A6D8C,  # wall -> Steel Blue
+                2: 0xFFFF851B,  # ft symbol -> Orange
+                3: 0xFF2ECC40,  # start -> Green
+                4: 0xFFFF4136,  # end -> Red Brick
+                5: 0xFF7FDBFF   # path -> Blue
+            },
+            {
+                0: 0xFF240046,  # empty -> Dark Purple
+                1: 0xFF5A189A,  # wall -> Purple
+                2: 0xFFFF9E00,  # ft symbol -> Orange
+                3: 0xFF00B4D8,  # start -> Blue
+                4: 0xFFF72585,  # end -> Magenta
+                5: 0xFFE0AAFF   # path -> Lavander
+            }
+        ]
 
 
 class ConfigParser:

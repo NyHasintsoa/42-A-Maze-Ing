@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/23 09:48:35 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/23 21:33:48 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/23 22:36:21 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -27,7 +27,7 @@ class MlxWindow:
     def __init__(self, config: Config, title: str) -> None:
         self.__mlx: Mlx = Mlx()
         self.__mlx_ptr: Any = self.__mlx.mlx_init()
-        self.__confif: Config = config
+        self.__config: Config = config
         width, height = self.__get_window_size()
         self.__window = self.__mlx.mlx_new_window(
             self.__mlx_ptr, width, height, title
@@ -54,12 +54,15 @@ class MlxWindow:
         _, screen_w, screen_h = self.__mlx.mlx_get_screen_size(self.__mlx_ptr)
         avail_w = (screen_w if screen_w else 1920) - 250
         avail_h = (screen_h if screen_h else 1080)
-        scale_x = max(1, avail_w // self.__confif.width)
-        scale_y = max(1, avail_h // self.__confif.height)
+        scale_x = max(1, avail_w // self.__config.width)
+        scale_y = max(1, avail_h // self.__config.height)
         scale = min(scale_x, scale_y, 16)
-        img_w = self.__confif.width * scale
-        img_h = self.__confif.height * scale
+        img_w = self.__config.width * scale
+        img_h = self.__config.height * scale
         return ((img_w + 250), img_h)
+
+    def get_mlx_var(self) -> MlxVar:
+        return self.__mlx_var
 
 
 class MlxEventHandler:

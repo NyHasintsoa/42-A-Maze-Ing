@@ -1,19 +1,16 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  __init__.py                                       :+:      :+:    :+:    #
+#  config_parser.py                                  :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/03/21 21:47:34 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/21 22:33:10 by nramalan        ###   ########.fr        #
+#  Created: 2026/03/21 21:31:32 by nramalan        #+#    #+#               #
+#  Updated: 2026/03/23 09:37:52 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from src.util.config_parser import ConfigParser
-from src.util.maze_resolver import MazeResolver
 
-__all__ = [
-    "ConfigParser",
-    "MazeResolver"
-]
+class ConfigParser:
+    def __init__(self) -> None:
+        pass

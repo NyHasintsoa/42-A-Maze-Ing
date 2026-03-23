@@ -10,9 +10,23 @@
 #                                                                              #
 # **************************************************************************** #
 
-SRCS_ALGORITHM :=
-SRCS_SERVICE :=
-SRCS :=
+SRCS_DIR := src
+ALROGITHM_DIR := $(SRCS_DIR)/algorithm
+EXCEPTIONS_DIR := $(SRCS_DIR)/exception
+SERVICE_DIR := $(SRCS_DIR)/service
+
+SRCS_ALGORITHM := __init__.py algorithm_generator.py \
+				backtracking.py prims.py
+SRCS_SERVICE := __init__.py config_parser.py maze_resolver.py
+SRCS_EXCEPTION := __init__.py config_exception.py maze_exception.py \
+				args_exception.py
+
+SRCS := $(addprefix $(ALROGITHM_DIR)/, $(SRCS_ALGORITHM)) \
+	$(addprefix $(SERVICE_DIR)/, $(SRCS_SERVICE)) \
+	$(addprefix $(EXCEPTIONS_DIR)/, $(SRCS_EXCEPTION)) \
+	$(SRCS_DIR)/maze_generator.py \
+	$(SRCS_DIR)/__init__.py
+	
 
 VENV := .venv
 VENV_BIN := @$(VENV)/bin
@@ -25,7 +39,7 @@ MYPY := $(VENV_BIN)/mypy
 
 NAME := mazegen-1.0.0-py3-none-any.whl
 
-.DEFAULT_GOAL := install
+.DEFAULT_GOAL := $(NAME)
 
 #----------------------------------------------
 # Main Commands
@@ -33,6 +47,8 @@ NAME := mazegen-1.0.0-py3-none-any.whl
 .PHONY: install
 install: $(VENV)
 	@echo "Installing project and its dependencies"
+	$(PIP) install --upgrade pip
+	$(PIP) install -r requirements.txt
 	$(PIP) install lib/mlx-2.2-py3-none-any.whl
 
 .PHONY: run
@@ -52,6 +68,7 @@ clean:
 	@find . -type d -name ".mypy_cache" -exec rm -rf {} +
 	@rm -rf .mypy_cache .pytest_cache
 	@rm -rf $(NAME) dist/
+	@rm -rf src/mazegen.egg-info
 
 .PHONY: lint
 lint: $(VENV)
@@ -68,9 +85,19 @@ lint-strict: $(VENV)
 	$(MYPY) . --strict
 
 #----------------------------------------------
+# Other Commands
+#----------------------------------------------
+$(NAME): $(VENV) $(SRCS)
+	@echo "Building project"
+	$(PYTHON) -m build
+	@cp dist/$(NAME) .
+	@rm -rf dist
+
+#----------------------------------------------
 # Dependencies
 #----------------------------------------------
 $(VENV):
+	@echo "Creating virtual environment and installing dependencies"
 	@python3 -m venv $(VENV)
 	$(PIP) install --upgrade pip
 	$(PIP) install -r requirements.txt

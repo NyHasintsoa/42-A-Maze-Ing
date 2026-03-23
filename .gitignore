@@ -7,9 +7,10 @@
 .venv
 .ipynb_checkpoints
 lib/*
-dist/*
+dist
 **/mazegen-1.0.0-py3-none-any.whl
 output.txt
+src/mazegen.egg-info
 
 ### VS Code ###
 .vscode/

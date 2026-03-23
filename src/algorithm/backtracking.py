@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 21:34:28 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/23 22:12:13 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/23 22:47:55 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -42,6 +42,7 @@ class Backtracking(AlgorithmGenerator):
     def __stacking(self, x: int, y: int, w: int, h: int) -> None:
         stack = [(x, y)]
         self.maze[y][x] |= BitPosition.VISITED.value
+        self.update_cell(x, y, self.maze[y][x])
         while stack:
             cx, cy = stack[-1]
             neighbors = self.__get_unvisited_neighbors(cx, cy, w, h)
@@ -49,6 +50,8 @@ class Backtracking(AlgorithmGenerator):
                 nx, ny = random.choice(neighbors)
                 self.maze[ny][nx] |= BitPosition.VISITED.value
                 self.remove_wall(cx, cy, nx, ny)
+                self.update_cell(cx, cy, self.maze[cy][cx])
+                self.update_cell(nx, ny, self.maze[ny][nx])
                 stack.append((nx, ny))
             else:
                 stack.pop()

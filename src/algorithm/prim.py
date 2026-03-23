@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 21:33:54 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/23 22:20:08 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/23 22:50:33 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -26,14 +26,16 @@ class Prim(AlgorithmGenerator):
         sx, sy = max(0, min(sx, w - 1)), max(0, min(sy, h - 1))
         frontier: List[Tuple[int, int, int, int]] = []
         self.maze[sy][sx] |= BitPosition.VISITED.value
+        self.update_cell(sx, sy, self.maze[sy][sx])
         self._add_to_frontier(sx, sy, frontier)
         while frontier:
             idx = random.randrange(len(frontier))
             cx, cy, nx, ny = frontier.pop(idx)
-
             if not (self.maze[ny][nx] & BitPosition.VISITED.value):
                 self.remove_wall(cx, cy, nx, ny)
                 self.maze[ny][nx] |= BitPosition.VISITED.value
+                self.update_cell(cx, cy, self.maze[cy][cx])
+                self.update_cell(nx, ny, self.maze[ny][nx])
                 self._add_to_frontier(nx, ny, frontier)
         return self.maze
 

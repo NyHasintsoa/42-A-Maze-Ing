@@ -8,7 +8,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/17 00:07:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/23 14:09:55 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/23 14:58:29 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,6 +16,7 @@
 import sys
 from src.exception import ArgsException, ConfigException
 from src.service.config_parser import ConfigParser
+from src.algorithm import Backtracking
 
 
 def main() -> None:
@@ -23,7 +24,8 @@ def main() -> None:
         raise ArgsException("Not enought arguments")
     config_parser = ConfigParser(sys.argv[1])
     config_parser.parse()
-    print(f"Config : {config_parser.get_config().__dict__}")
+    algorithm = Backtracking(config_parser.get_config())
+    print(algorithm.generate())
 
 
 if __name__ == "__main__":

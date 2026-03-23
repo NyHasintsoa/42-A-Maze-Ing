@@ -6,13 +6,14 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 21:34:28 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/21 22:32:27 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/23 15:03:34 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from src.algorithm import AlgorithmGenerator
+from src.algorithm.algorithm_generator import AlgorithmGenerator
+from typing import List
 
 
 class Backtracking(AlgorithmGenerator):
-    def generate(self, value: int) -> None:
-        print(value)
+    def generate(self) -> List[List[int]]:
+        return self.maze

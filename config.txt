@@ -23,7 +23,7 @@ EXIT=50,14
 #-------------------------------------------------------
 # Other Configurations
 #-------------------------------------------------------
-OUTPUT_FILE=output.txt
+OUTPUT_FILE=maze.txt
 PERFECT=False
 ANIMATION=False
 SEED=0

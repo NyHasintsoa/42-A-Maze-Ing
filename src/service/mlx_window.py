@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/23 09:48:35 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/23 10:42:26 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/23 14:52:45 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -30,10 +30,11 @@ class MlxWindow:
             self.__mlx_ptr, self.width, self.height, self.title
         )
 
-    def close_window(self) -> None:
-        self.__mlx.mlx_destroy_window(self.__mlx_ptr, self.__window)
+    def close_window(self, dumpy) -> None:
+        self.__mlx.mlx_loop_exit(self.__mlx_ptr)
 
     def render(self) -> None:
+        self.__mlx.mlx_hook(self.__window, 33, 0, self.close_window, None)
         self.__mlx.mlx_loop(self.__mlx_ptr)
 
     def get_screen_size(self) -> Tuple[Any, int, int]:

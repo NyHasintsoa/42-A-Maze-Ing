@@ -8,20 +8,28 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/17 00:07:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/21 22:34:09 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/23 14:09:55 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 
 import sys
-from src.exception import ArgsException
+from src.exception import ArgsException, ConfigException
+from src.service.config_parser import ConfigParser
 
 
 def main() -> None:
     if len(sys.argv) <= 1:
         raise ArgsException("Not enought arguments")
-    print("PYTHON A-Maze-Ing")
+    config_parser = ConfigParser(sys.argv[1])
+    config_parser.parse()
+    print(f"Config : {config_parser.get_config().__dict__}")
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except ArgsException as e:
+        print(f"Args error: {e}", file=sys.stderr)
+    except ConfigException as e:
+        print(f"Config error: {e}", file=sys.stderr)

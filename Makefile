@@ -53,12 +53,10 @@ install: $(VENV)
 
 .PHONY: run
 run: $(VENV)
-	@echo "Running project"
 	$(PYTHON) a_maze_ing.py config.txt
 
 .PHONY: debug
 debug: $(VENV)
-	@echo "Debugging project"
 	$(PDB) a_maze_ing.py
 
 .PHONY: clean

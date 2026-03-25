@@ -6,7 +6,7 @@
 #    By: nramalan <nramalan@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/21 18:02:15 by nramalan          #+#    #+#              #
-#    Updated: 2026/03/21 20:00:18 by nramalan         ###   ########.fr        #
+#    Updated: 2026/03/25 23:18:08 by nramalan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,7 +57,7 @@ run: $(VENV)
 
 .PHONY: debug
 debug: $(VENV)
-	$(PDB) a_maze_ing.py
+	$(PDB) a_maze_ing.py config.txt
 
 .PHONY: clean
 clean:

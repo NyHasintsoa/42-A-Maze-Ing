@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 21:31:32 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/23 22:28:17 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/25 20:16:50 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -26,6 +26,7 @@ class Config:
         self.algorithm: AlgorithmType = AlgorithmType.BACKTRACKING
         self.width: int = 10
         self.height: int = 10
+        self.panel_size: int = 250
         self.entry: Tuple[int, int] = (0, 0)
         self.exit: Tuple[int, int] = (0, 0)
         self.output_file: str = "output.txt"

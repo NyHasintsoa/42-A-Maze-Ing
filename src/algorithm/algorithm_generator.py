@@ -6,12 +6,12 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 22:04:11 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/25 16:05:59 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/25 20:17:16 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 from src.service import Config, BitPosition
-from src.graphic import MlxVar
+from src.graphic.mlx_window import MlxVar
 from abc import ABC, abstractmethod
 from typing import List, ByteString
 import struct
@@ -84,7 +84,7 @@ class AlgorithmGenerator(ABC):
 
     def update_cell(self, mx: int, my: int, mask: int) -> None:
         screen_w, screen_h = 1920, 1080
-        avail_w = screen_w - 250
+        avail_w = screen_w - self.config.panel_size
         avail_h = screen_h
 
         scale_x = max(1, avail_w // self.config.width)

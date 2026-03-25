@@ -1,22 +1,21 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  __init__.py                                       :+:      :+:    :+:    #
+#  mlx_utils.py                                      :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/03/25 16:04:41 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/25 20:58:08 by nramalan        ###   ########.fr        #
+#  Created: 2026/03/25 18:37:05 by nramalan        #+#    #+#               #
+#  Updated: 2026/03/25 21:45:05 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from src.graphic.mlx_window import MlxWindow, MlxVar
-from src.graphic.ui.mlx_button import MlxButton
-from src.graphic.ui_manager import UIManager
+from typing import Any
+from mlx import Mlx
 
-__all__ = [
-    "MlxWindow",
-    "MlxVar",
-    "MlxButton",
-    "UIManager",
-]
+
+class MlxVar:
+    def __init__(self, mlx: Mlx, mlx_ptr: Any, window: Any) -> None:
+        self.mlx: Mlx = mlx
+        self.mlx_ptr: Any = mlx_ptr
+        self.window: Any = window

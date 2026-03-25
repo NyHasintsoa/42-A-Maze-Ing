@@ -6,11 +6,12 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 22:04:11 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/23 22:36:59 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/25 16:05:59 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from src.service import Config, BitPosition, MlxVar
+from src.service import Config, BitPosition
+from src.graphic import MlxVar
 from abc import ABC, abstractmethod
 from typing import List, ByteString
 import struct

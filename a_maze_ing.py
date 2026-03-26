@@ -8,7 +8,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/17 00:07:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/25 22:25:16 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/25 23:49:20 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,7 +16,7 @@
 import sys
 from src.exception import ArgsException, ConfigException
 from src.service.config_parser import ConfigParser, Config
-from src.graphic import MlxWindow, MlxButton, UIManager
+from src.graphic import MlxWindow, MlxButton, UIManager, MlxPanel
 
 
 def main() -> None:
@@ -31,6 +31,15 @@ def main() -> None:
     mlx_window.add_hook()
     ui_manager = UIManager(mlx_window.mlx_var)
     mlx_window.set_ui_manager(ui_manager)
+    red_panel = MlxPanel(
+        pos_x=0,
+        pos_y=0,
+        width=200,  # Width of the panel
+        height=mlx_window.get_window_size()[1],  # Full height of the window
+        bg_color=0xFF0000,  # Red color
+        border_width=0,  # No border
+    )
+    ui_manager.add_component(red_panel)
     button = MlxButton(
         pos_x=25,
         pos_y=25,

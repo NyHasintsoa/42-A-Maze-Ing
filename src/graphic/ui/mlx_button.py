@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/25 18:42:50 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/25 23:24:03 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/25 23:46:02 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -42,9 +42,6 @@ class MlxButton(MlxComponent):
         self._on_click = lambda: print(f"Clicked: {self.text}")
 
     def render(self) -> None:
-        if not self.visible:
-            return
-
         self._create_image()
         self.mlx_var.mlx.mlx_put_image_to_window(
             self.mlx_var.mlx_ptr,

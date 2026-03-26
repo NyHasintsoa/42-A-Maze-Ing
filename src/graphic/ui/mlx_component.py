@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/25 18:34:13 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/25 22:24:39 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/25 23:46:56 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -27,8 +27,6 @@ class MlxComponent(ABC):
         self.pos_y = pos_y
         self.width = width
         self.height = height
-        self.visible = True
-        self.enabled = True
         self._on_click: Callable[[], None]
         self._img_ptr = None
 
@@ -41,11 +39,8 @@ class MlxComponent(ABC):
         pass
 
     def is_point_inside(self, x: int, y: int) -> bool:
-        """Check if a point is inside the component"""
         return (
-            self.visible
-            and self.enabled
-            and self.pos_x <= x <= self.pos_x + self.width
+            self.pos_x <= x <= self.pos_x + self.width
             and self.pos_y <= y <= self.pos_y + self.height
         )
 
@@ -58,18 +53,10 @@ class MlxComponent(ABC):
         self._on_click = handler
 
     def show(self) -> None:
-        self.visible = True
         self.render()
 
     def hide(self) -> None:
-        self.visible = False
         self._clear_image()
-
-    def enable(self) -> None:
-        self.enabled = True
-
-    def disable(self) -> None:
-        self.enabled = False
 
     def _clear_image(self) -> None:
         if self._img_ptr and self.mlx_var:

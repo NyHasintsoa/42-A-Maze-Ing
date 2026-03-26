@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 21:33:54 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 15:19:14 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 15:31:05 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -20,10 +20,7 @@ from src.service import BitPosition
 class Prim(AlgorithmGenerator):
     def generate(self) -> List[List[int]]:
         w, h = self.config.width, self.config.height
-        try:
-            sx, sy = self.config.entry
-        except (TypeError, ValueError):
-            sx, sy = 0, 0
+        sx, sy = self.config.entry
         for y in range(h):
             for x in range(w):
                 if not (self.maze[y][x] & BitPosition.VISITED.value):

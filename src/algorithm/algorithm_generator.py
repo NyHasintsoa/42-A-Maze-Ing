@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 22:04:11 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 13:56:00 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 15:40:06 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -82,10 +82,11 @@ class AlgorithmGenerator(ABC):
             self.maze[y2][x2] |= bit2
 
     def update_cell(self, mx: int, my: int, mask: int) -> None:
-        screen_w, screen_h = 1920, 1080
+        _, screen_w, screen_h = self.mlx_var.mlx.mlx_get_screen_size(
+            self.mlx_var.mlx_ptr
+        )
         avail_w = screen_w - self.config.panel_size
         avail_h = screen_h
-
         scale_x = max(1, avail_w // self.config.width)
         scale_y = max(1, avail_h // self.config.height)
         scale = min(scale_x, scale_y, 16)
@@ -94,7 +95,7 @@ class AlgorithmGenerator(ABC):
         def get_color_bytes(color_int: int) -> ByteString:
             return struct.pack("<I", color_int)
 
-        palette = self.config.colors[0]
+        palette = self.config.colors[3]
         wall_bytes = get_color_bytes(palette.get(1, 0x000000))
         path_bytes = get_color_bytes(palette.get(0, 0xFFFFFF))
 

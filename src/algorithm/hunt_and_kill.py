@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/23 22:18:10 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 15:23:37 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 15:31:17 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -21,10 +21,7 @@ from src.service import BitPosition
 class HuntAndKill(AlgorithmGenerator):
     def generate(self) -> List[List[int]]:
         w, h = self.config.width, self.config.height
-        try:
-            cx, cy = self.config.entry
-        except (TypeError, ValueError):
-            cx, cy = 0, 0
+        cx, cy = self.config.entry
         for y in range(h):
             for x in range(w):
                 if not (self.maze[y][x] & BitPosition.VISITED.value):

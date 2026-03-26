@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 21:34:28 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 15:13:31 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 15:30:58 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -20,10 +20,7 @@ from typing import List, Tuple
 class Backtracking(AlgorithmGenerator):
     def generate(self) -> List[List[int]]:
         w, h = self.config.width, self.config.height
-        try:
-            ex, ey = self.config.entry
-        except (TypeError, ValueError):
-            ex, ey = 0, 0
+        ex, ey = self.config.entry
         for y in range(h):
             for x in range(w):
                 if not (self.maze[y][x] & BitPosition.VISITED.value):

@@ -8,7 +8,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/17 00:07:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 15:26:10 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 17:52:15 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -17,7 +17,7 @@ import sys
 from src.exception import ArgsException, ConfigException, MlxException
 from src.service import ConfigParser, Config
 from src.graphic import MlxWindow, MlxButton
-from src.algorithm import Prim
+from src.algorithm import Prim, MazeResolver
 
 
 def main() -> None:
@@ -48,6 +48,15 @@ def main() -> None:
         for x in y:
             print(f"{x}", end=' ')
         print()
+    algo.make_non_perfect()
+    print("after making non perfect")
+    for y in result:
+        for x in y:
+            print(f"{x}", end=' ')
+        print()
+    algo.render_maze_to_mlx()
+    resolver = MazeResolver(config, result)
+    print(f"resolver = {resolver.solve()}")
     mlx_window.render()
     mlx_window.close_window()
 

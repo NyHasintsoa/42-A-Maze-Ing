@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 21:31:32 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 15:19:50 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 16:08:09 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -27,7 +27,7 @@ class Config:
         self.width: int = 10
         self.height: int = 10
         self.panel_size: int = 250
-        self.delay: float = 0.01
+        self.delay: float = 0
         self.entry: Tuple[int, int] = (0, 0)
         self.exit: Tuple[int, int] = (0, 0)
         self.output_file: str = "output.txt"
@@ -144,5 +144,25 @@ to read '{self.config_path}'.")
         self.__apply_config(config)
         return config
 
+    def validate_config(self) -> None:
+        if not (self.validate_coordonates(self.__config.entry)):
+            raise ConfigException("Entry coordinates not in Size")
+        if not (self.validate_coordonates(self.__config.exit)):
+            raise ConfigException("Exit coordinates not in Size")
+        entry_x, entry_y = self.__config.entry
+        exit_x, exit_y = self.__config.exit
+        if entry_x == exit_x and entry_y == exit_y:
+            raise ConfigException(
+                "Entry and Exit coordinates must be different"
+            )
+
+    def validate_coordonates(self, coordonates: Tuple[int, int]) -> bool:
+        x, y = coordonates
+        return (
+            (0 <= x < self.__config.width)
+            and (0 <= y < self.__config.height)
+        )
+
     def get_config(self) -> Config:
+        self.validate_config()
         return self.__config

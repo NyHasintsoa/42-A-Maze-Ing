@@ -6,15 +6,17 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 22:04:11 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 15:40:06 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 18:04:46 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 from src.service import Config, BitPosition
 from src.graphic.mlx_utils import MlxVar
 from abc import ABC, abstractmethod
-from typing import List, ByteString
+from typing import List, Dict, Tuple, Any
 import struct
+import random
+import time
 
 
 class AlgorithmGenerator(ABC):
@@ -27,6 +29,15 @@ class AlgorithmGenerator(ABC):
     def generate(self) -> List[List[int]]:
         pass
 
+    def get_42_symbol(self) -> List[List[int]]:
+        return [
+            [16, 31, 31, 29, 16, 16, 16],
+            [16, 31, 31, 31, 26, 26, 16],
+            [16, 16, 16, 21, 16, 16, 16],
+            [31, 31, 16, 21, 16, 18, 26],
+            [31, 31, 16, 21, 16, 16, 16],
+        ]
+
     def init_maze(self) -> List[List[int]]:
         self.maze.clear()
         full_connections = (
@@ -37,17 +48,11 @@ class AlgorithmGenerator(ABC):
             self.maze.append(
                 [full_connections for _ in range(self.config.width)]
             )
-        self.__generate_42_walls()
+        self.__generate_42_symbol()
         return self.maze
 
-    def __generate_42_walls(self) -> List[List[int]]:
-        symbol: List[List[int]] = [
-            [16, 31, 31, 29, 16, 16, 16],
-            [16, 31, 31, 31, 26, 26, 16],
-            [16, 16, 16, 21, 16, 16, 16],
-            [31, 31, 16, 21, 16, 18, 26],
-            [31, 31, 16, 21, 16, 16, 16],
-        ]
+    def __generate_42_symbol(self) -> List[List[int]]:
+        symbol: List[List[int]] = self.get_42_symbol()
         maze_h = len(self.maze)
         maze_w = len(self.maze[0])
         sym_h = len(symbol)
@@ -68,7 +73,7 @@ class AlgorithmGenerator(ABC):
         return self.maze
 
     def remove_wall(self, x1: int, y1: int, x2: int, y2: int) -> None:
-        directions = {
+        directions: Dict[Tuple[int, int], Tuple[Any, Any]] = {
             (0, -1): (BitPosition.NORTH.value, BitPosition.SOUTH.value),
             (0, 1):  (BitPosition.SOUTH.value, BitPosition.NORTH.value),
             (-1, 0): (BitPosition.WEST.value,  BitPosition.EAST.value),
@@ -81,61 +86,118 @@ class AlgorithmGenerator(ABC):
             self.maze[y1][x1] |= bit1
             self.maze[y2][x2] |= bit2
 
-    def update_cell(self, mx: int, my: int, mask: int) -> None:
+    def make_non_perfect(self) -> None:
+        h = len(self.maze)
+        w = len(self.maze[0])
+        target_loops = max(2, (w * h) // 20)
+        loops_added = 0
+        all_cells = [(x, y) for y in range(h) for x in range(w)]
+        random.shuffle(all_cells)
+
+        for cx, cy in all_cells:
+            if loops_added >= target_loops:
+                break
+
+            neighbors = [
+                (0, -1, BitPosition.NORTH.value, BitPosition.SOUTH.value),
+                (1, 0, BitPosition.EAST.value, BitPosition.WEST.value),
+                (0, 1, BitPosition.SOUTH.value, BitPosition.NORTH.value),
+                (-1, 0, BitPosition.WEST.value, BitPosition.EAST.value)
+            ]
+            random.shuffle(neighbors)
+
+            for dx, dy, bit_curr, bit_neigh in neighbors:
+                nx, ny = cx + dx, cy + dy
+                if not (0 <= nx < w and 0 <= ny < h):
+                    continue
+                if not (self.maze[cy][cx] & bit_curr) \
+                        and (
+                            self.maze[ny][nx] != 16 and self.maze[cy][cx] != 16
+                        ):
+                    self.maze[cy][cx] |= bit_curr
+                    self.maze[ny][nx] |= bit_neigh
+                    loops_added += 1
+                    break
+
+    def _get_render_params(self) -> Tuple[int, int]:
         _, screen_w, screen_h = self.mlx_var.mlx.mlx_get_screen_size(
             self.mlx_var.mlx_ptr
         )
         avail_w = screen_w - self.config.panel_size
-        avail_h = screen_h
         scale_x = max(1, avail_w // self.config.width)
-        scale_y = max(1, avail_h // self.config.height)
+        scale_y = max(1, screen_h // self.config.height)
         scale = min(scale_x, scale_y, 16)
-        border_thick = max(1, scale // 5)
+        return scale, max(1, scale // 5)
 
-        def get_color_bytes(color_int: int) -> ByteString:
-            return struct.pack("<I", color_int)
+    def _get_cell_color(
+        self, mx: int, my: int, mask: int, palette_idx: int = 0
+    ) -> bytes:
+        palette = self.config.colors[palette_idx]
 
-        palette = self.config.colors[3]
-        wall_bytes = get_color_bytes(palette.get(1, 0x000000))
-        path_bytes = get_color_bytes(palette.get(0, 0xFFFFFF))
+        def to_bytes(c_idx: int, default: int) -> bytes:
+            return struct.pack("<I", palette.get(c_idx, default))
 
         if (mx, my) == self.config.entry:
-            bg_bytes = get_color_bytes(palette.get(3, 0x00FF00))
-        elif (mx, my) == self.config.exit:
-            bg_bytes = get_color_bytes(palette.get(4, 0x0000FF))
-        elif (mask & 0xF) == 0:
-            bg_bytes = get_color_bytes(palette.get(2, 0xFF0000))
-        else:
-            bg_bytes = path_bytes
-        start_y = my * scale
-        start_x = mx * scale
+            return to_bytes(3, 0x00FF00)  # Entry
+        if (mx, my) == self.config.exit:
+            return to_bytes(4, 0x0000FF)  # Exit
+        if (mask & 0xF) == 0:
+            return to_bytes(2, 0xFF0000)  # Isolated
+        return to_bytes(0, 0xFFFFFF)  # Path
+
+    def _is_wall(
+        self, dx: int, dy: int, scale: int, border: int, mask: int
+    ) -> bool:
+        return (
+            (dy < border and not (mask & BitPosition.NORTH.value)) or
+            (dx >= scale - border and not (mask & BitPosition.EAST.value)) or
+            (dy >= scale - border and not (mask & BitPosition.SOUTH.value)) or
+            (dx < border and not (mask & BitPosition.WEST.value))
+        )
+
+    def update_cell(self, mx: int, my: int, mask: int) -> None:
+        scale, border = self._get_render_params()
+        wall_bytes = struct.pack("<I", self.config.colors[3].get(1, 0x000000))
+        bg_bytes = self._get_cell_color(mx, my, mask)
+
         for dy in range(scale):
             for dx in range(scale):
-                is_wall = (
-                    (
-                        dy < border_thick and not (
-                            mask & BitPosition.NORTH.value
-                        )
-                    ) or
-                    (
-                        dx >= scale - border_thick and not (
-                            mask & BitPosition.EAST.value
-                        )
-                    ) or
-                    (
-                        dy >= scale - border_thick and not (
-                            mask & BitPosition.SOUTH.value
-                        )
-                    ) or
-                    (dx < border_thick and not (mask & BitPosition.WEST.value))
+                is_wall = self._is_wall(dx, dy, scale, border, mask)
+                color_bytes = wall_bytes if is_wall else bg_bytes
+                color_int = struct.unpack("<I", color_bytes)[0]
+                self.mlx_var.mlx.mlx_pixel_put(
+                    self.mlx_var.mlx_ptr, self.mlx_var.window,
+                    (mx * scale) + dx, (my * scale) + dy, color_int
                 )
 
-                color = wall_bytes if is_wall else bg_bytes
-                color_int = struct.unpack("<I", color)[0]
-                self.mlx_var.mlx.mlx_pixel_put(
-                    self.mlx_var.mlx_ptr,
-                    self.mlx_var.window,
-                    start_x + dx,
-                    start_y + dy,
-                    color_int
-                )
+    def render_maze_to_mlx(self) -> None:
+        scale, border = self._get_render_params()
+        img = self.mlx_var.mlx.mlx_new_image(
+            self.mlx_var.mlx_ptr,
+            self.config.width * scale,
+            self.config.height * scale
+        )
+        data, _, sl, _ = self.mlx_var.mlx.mlx_get_data_addr(img)
+        wall_bytes = struct.pack("<I", self.config.colors[3].get(1, 0x000000))
+
+        for my in range(self.config.height):
+            for mx in range(self.config.width):
+                mask = self.maze[my][mx]
+                bg_bytes = self._get_cell_color(mx, my, mask)
+
+                cell_y_off = my * scale
+                cell_x_off = mx * scale
+
+                for dy in range(scale):
+                    row_off = (cell_y_off + dy) * sl
+                    for dx in range(scale):
+                        is_wall = self._is_wall(dx, dy, scale, border, mask)
+                        off = row_off + (cell_x_off + dx) * 4
+                        if off + 4 <= len(data):
+                            data[off:off+4] = wall_bytes \
+                                    if is_wall else bg_bytes
+
+        self.mlx_var.mlx.mlx_put_image_to_window(
+            self.mlx_var.mlx_ptr, self.mlx_var.window, img, 0, 0
+        )
+        time.sleep(self.config.delay)

@@ -6,12 +6,12 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/25 18:34:13 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/25 23:46:56 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 09:50:05 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 from abc import ABC, abstractmethod
-from typing import Callable
+from typing import Callable, Optional
 from src.graphic.mlx_utils import MlxVar
 import random
 
@@ -19,7 +19,7 @@ import random
 class MlxComponent(ABC):
     def __init__(
         self, pos_x: int = 0, pos_y: int = 0,
-        width: int = 100, height: int = 100
+        width: int = 100, height: int = 100,
     ) -> None:
         self.mlx_var: MlxVar
         self.id: str = f"component_{random.randint(1000, 9999)}"
@@ -27,15 +27,11 @@ class MlxComponent(ABC):
         self.pos_y = pos_y
         self.width = width
         self.height = height
-        self._on_click: Callable[[], None]
-        self._img_ptr = None
+        self.on_click: Optional[Callable[[], None]]
+        self.bg_ptr = None
 
     @abstractmethod
     def render(self) -> None:
-        pass
-
-    @abstractmethod
-    def _create_image(self) -> None:
         pass
 
     def is_point_inside(self, x: int, y: int) -> bool:
@@ -44,26 +40,8 @@ class MlxComponent(ABC):
             and self.pos_y <= y <= self.pos_y + self.height
         )
 
-    @property
-    def on_click(self) -> Callable[[], None]:
-        return self._on_click
-
-    @on_click.setter
-    def on_click(self, handler: Callable[[], None]) -> None:
-        self._on_click = handler
-
-    def show(self) -> None:
-        self.render()
-
-    def hide(self) -> None:
-        self._clear_image()
-
-    def _clear_image(self) -> None:
-        if self._img_ptr and self.mlx_var:
-            self.mlx_var.mlx.mlx_destroy_image(
-                self.mlx_var.mlx_ptr, self._img_ptr
-            )
-            self._img_ptr = None
-
-    def __del__(self):
-        self._clear_image()
+    @staticmethod
+    def create_trgb(
+        transparency: int, red: int, green: int, blue: int
+    ) -> int:
+        return transparency << 24 | red << 16 | green << 8 | blue;

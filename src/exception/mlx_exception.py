@@ -1,21 +1,16 @@
 # ************************************************************************* #
 #                                                                           #
 #                                                      :::      ::::::::    #
-#  mlx_utils.py                                      :+:      :+:    :+:    #
+#  mlx_exception.py                                  :+:      :+:    :+:    #
 #                                                  +:+ +:+         +:+      #
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
-#  Created: 2026/03/25 18:37:05 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 09:24:09 by nramalan        ###   ########.fr        #
+#  Created: 2026/03/26 07:54:31 by nramalan        #+#    #+#               #
+#  Updated: 2026/03/26 07:54:37 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from typing import Any
-from mlx import Mlx
 
-
-class MlxVar:
-    def __init__(self, mlx: Mlx, mlx_ptr: Any, window: Any) -> None:
-        self.mlx: Mlx = mlx
-        self.mlx_ptr: Any = mlx_ptr
-        self.window: Any = window
+class MlxException(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)

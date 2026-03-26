@@ -8,59 +8,37 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/17 00:07:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/25 23:49:20 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 09:42:20 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 
 import sys
-from src.exception import ArgsException, ConfigException
+from src.exception import ArgsException, ConfigException, MlxException
 from src.service.config_parser import ConfigParser, Config
-from src.graphic import MlxWindow, MlxButton, UIManager, MlxPanel
+from src.graphic import MlxWindow, MlxButton
 
 
 def main() -> None:
     if len(sys.argv) <= 1:
         raise ArgsException("Not enough arguments")
-
     config_parser = ConfigParser(sys.argv[1])
     config_parser.parse()
     config: Config = config_parser.get_config()
     print(f"config = {config.__dict__}")
     mlx_window = MlxWindow(config, "A-Maze-Ing")
-    mlx_window.add_hook()
-    ui_manager = UIManager(mlx_window.mlx_var)
-    mlx_window.set_ui_manager(ui_manager)
-    red_panel = MlxPanel(
-        pos_x=0,
-        pos_y=0,
-        width=200,  # Width of the panel
-        height=mlx_window.get_window_size()[1],  # Full height of the window
-        bg_color=0xFF0000,  # Red color
-        border_width=0,  # No border
-    )
-    ui_manager.add_component(red_panel)
+    ui_manager = mlx_window.ui_manager
+    mlx_window.add_event_hook()
     button = MlxButton(
-        pos_x=25,
-        pos_y=25,
+        pos_x=500,
+        pos_y=175,
         text="Click Me!",
-        bg_color=0x4CAF50,  # Green background
-        hover_color=0x45A049,  # Darker green on hover
-        text_color=0xFFFFFF,  # White text
-        border_color=0x2E7D32,  # Dark green border
+        bg_color=0xFF58FFFA,
+        text_color=0xFFFFFF,
     )
     button.on_click = lambda: print("Button clicked! 🎉")
     ui_manager.add_component(button)
-    second_button = MlxButton(
-        pos_x=25,
-        pos_y=85,
-        text="Exit",
-        bg_color=0xF44336,  # Red background
-        hover_color=0xD32F2F,  # Darker red on hover
-        text_color=0xFFFFFF,
-    )
-    second_button.on_click = lambda: mlx_window.close_window()
-    ui_manager.add_component(second_button)
+    ui_manager.render_components()
     mlx_window.render()
     mlx_window.close_window()
 
@@ -72,3 +50,5 @@ if __name__ == "__main__":
         print(f"Args error: {e}", file=sys.stderr)
     except ConfigException as e:
         print(f"Config error: {e}", file=sys.stderr)
+    except MlxException as e:
+        print(f"Mlx Error: {e}", file=sys.stderr)

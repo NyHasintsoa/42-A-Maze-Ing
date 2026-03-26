@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/25 18:34:13 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 09:50:05 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 09:53:43 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -44,4 +44,4 @@ class MlxComponent(ABC):
     def create_trgb(
         transparency: int, red: int, green: int, blue: int
     ) -> int:
-        return transparency << 24 | red << 16 | green << 8 | blue;
+        return transparency << 24 | red << 16 | green << 8 | blue

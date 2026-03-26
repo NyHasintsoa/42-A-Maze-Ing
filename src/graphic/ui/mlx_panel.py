@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/25 23:47:52 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/25 23:51:17 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 09:54:57 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -21,14 +21,15 @@ class MlxPanel(MlxComponent):
         pos_y: int = 0,
         width: int = 200,
         height: int = 100,
-        bg_color: int = 0xFF0000,  # Red by default
+        bg_color: int = 0xFF0000,
         border_color: Optional[int] = None,
         border_width: int = 0,
-        transparency: int = 0,  # 0 = opaque, 255 = fully transparent
+        transparency: int = 0,
     ) -> None:
         super().__init__(pos_x, pos_y, width, height)
         self.bg_color = bg_color
-        self.border_color = border_color if border_color is not None else bg_color
+        self.border_color = border_color \
+            if border_color is not None else bg_color
         self.border_width = border_width
         self.transparency = transparency
         self._img_ptr = None
@@ -54,9 +55,10 @@ class MlxPanel(MlxComponent):
         if not self.mlx_var:
             return
 
-        # Clean up old image if exists
         if self._img_ptr:
-            self.mlx_var.mlx.mlx_destroy_image(self.mlx_var.mlx_ptr, self._img_ptr)
+            self.mlx_var.mlx.mlx_destroy_image(
+                self.mlx_var.mlx_ptr, self._img_ptr
+            )
 
         self._img_ptr = self.mlx_var.mlx.mlx_new_image(
             self.mlx_var.mlx_ptr, self.width, self.height
@@ -72,7 +74,8 @@ class MlxPanel(MlxComponent):
         bg_bytes = bg_color_with_alpha.to_bytes(4, "little")
 
         # Prepare border color
-        border_bytes = self._apply_transparency(self.border_color).to_bytes(4, "little")
+        border_bytes = self._apply_transparency(self.border_color)\
+            .to_bytes(4, "little")
 
         # Fill the panel
         for y in range(self.height):
@@ -90,7 +93,7 @@ class MlxPanel(MlxComponent):
                     color_bytes = bg_bytes
 
                 pixel_offset = line_offset + (x * 4)
-                buf[pixel_offset : pixel_offset + 4] = color_bytes
+                buf[pixel_offset: pixel_offset + 4] = color_bytes
 
     def _apply_transparency(self, color: int) -> int:
         """Apply transparency to a color"""
@@ -102,21 +105,4 @@ class MlxPanel(MlxComponent):
         green = (color >> 8) & 0xFF
         blue = color & 0xFF
 
-        # Apply transparency (alpha is in the highest byte)
-        # MinilibX expects ARGB format: (alpha << 24) | (red << 16) | (green << 8) | blue
         return (self.transparency << 24) | (red << 16) | (green << 8) | blue
-
-    def update_color(self, new_color: int) -> None:
-        """Update the panel's background color"""
-        self.bg_color = new_color
-        self.render()
-
-    def update_border(
-        self, border_color: Optional[int] = None, border_width: int = None
-    ) -> None:
-        """Update the panel's border"""
-        if border_color is not None:
-            self.border_color = border_color
-        if border_width is not None:
-            self.border_width = border_width
-        self.render()

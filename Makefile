@@ -6,7 +6,7 @@
 #    By: nramalan <nramalan@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/21 18:02:15 by nramalan          #+#    #+#              #
-#    Updated: 2026/03/25 23:18:08 by nramalan         ###   ########.fr        #
+#    Updated: 2026/03/26 09:57:06 by nramalan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,6 @@ SRCS := $(addprefix $(ALROGITHM_DIR)/, $(SRCS_ALGORITHM)) \
 	$(addprefix $(EXCEPTIONS_DIR)/, $(SRCS_EXCEPTION)) \
 	$(SRCS_DIR)/maze_generator.py \
 	$(SRCS_DIR)/__init__.py
-	
 
 VENV := .venv
 VENV_BIN := @$(VENV)/bin

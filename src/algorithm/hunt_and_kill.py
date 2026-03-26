@@ -6,12 +6,13 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/23 22:18:10 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/23 22:49:29 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 15:23:37 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 
 import random
+import time
 from typing import List, Tuple, Optional
 from src.algorithm.algorithm_generator import AlgorithmGenerator
 from src.service import BitPosition
@@ -24,10 +25,16 @@ class HuntAndKill(AlgorithmGenerator):
             cx, cy = self.config.entry
         except (TypeError, ValueError):
             cx, cy = 0, 0
+        for y in range(h):
+            for x in range(w):
+                if not (self.maze[y][x] & BitPosition.VISITED.value):
+                    self.maze[y][x] = 0
         cx = max(0, min(cx, w - 1))
         cy = max(0, min(cy, h - 1))
         self.maze[cy][cx] |= BitPosition.VISITED.value
         self.update_cell(cx, cy, self.maze[cy][cx])
+        time.sleep(self.config.delay)
+        self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
         while True:
             self.__kill_phase(cx, cy, w, h)
             hunt_result = self.__hunt_phase(w, h)
@@ -48,7 +55,11 @@ class HuntAndKill(AlgorithmGenerator):
             self.remove_wall(curr_x, curr_y, nx, ny)
             self.maze[ny][nx] |= BitPosition.VISITED.value
             self.update_cell(curr_x, curr_y, self.maze[curr_y][curr_x])
+            time.sleep(self.config.delay)
+            self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
             self.update_cell(nx, ny, self.maze[ny][nx])
+            time.sleep(self.config.delay)
+            self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
             curr_x, curr_y = nx, ny
 
     def __hunt_phase(self, w: int, h: int) -> Optional[Tuple[int, int]]:
@@ -64,7 +75,11 @@ class HuntAndKill(AlgorithmGenerator):
                     self.remove_wall(x, y, nx, ny)
                     self.maze[y][x] |= BitPosition.VISITED.value
                     self.update_cell(nx, ny, self.maze[ny][nx])
+                    time.sleep(self.config.delay)
+                    self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
                     self.update_cell(x, y, self.maze[y][x])
+                    time.sleep(self.config.delay)
+                    self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
                     return (x, y)
         return None
 

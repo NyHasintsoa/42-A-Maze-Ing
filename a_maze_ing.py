@@ -8,7 +8,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/17 00:07:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 15:17:16 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 15:26:10 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -17,7 +17,7 @@ import sys
 from src.exception import ArgsException, ConfigException, MlxException
 from src.service import ConfigParser, Config
 from src.graphic import MlxWindow, MlxButton
-from src.algorithm import Backtracking
+from src.algorithm import Prim
 
 
 def main() -> None:
@@ -41,7 +41,7 @@ def main() -> None:
     button.on_click = lambda: print("Button clicked! 🎉")
     ui_manager.add_component(button)
     ui_manager.render_components()
-    algo = Backtracking(config, mlx_window.mlx_var)
+    algo = Prim(config, mlx_window.mlx_var)
     algo.init_maze()
     result = algo.generate()
     for y in result:

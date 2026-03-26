@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 22:04:11 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 09:56:20 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 13:56:00 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -22,7 +22,6 @@ class AlgorithmGenerator(ABC):
         self.config: Config = config
         self.mlx_var: MlxVar = mlx_var
         self.maze: List[List[int]] = []
-        self.init_maze()
 
     @abstractmethod
     def generate(self) -> List[List[int]]:

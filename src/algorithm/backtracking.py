@@ -6,11 +6,12 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 21:34:28 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/23 22:47:55 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 15:13:31 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 import random
+import time
 from src.algorithm.algorithm_generator import AlgorithmGenerator
 from src.service import BitPosition
 from typing import List, Tuple
@@ -23,6 +24,10 @@ class Backtracking(AlgorithmGenerator):
             ex, ey = self.config.entry
         except (TypeError, ValueError):
             ex, ey = 0, 0
+        for y in range(h):
+            for x in range(w):
+                if not (self.maze[y][x] & BitPosition.VISITED.value):
+                    self.maze[y][x] = 0
         start_x = max(0, min(ex, w - 1))
         start_y = max(0, min(ey, h - 1))
         self.__stacking(start_x, start_y, w, h)
@@ -43,6 +48,8 @@ class Backtracking(AlgorithmGenerator):
         stack = [(x, y)]
         self.maze[y][x] |= BitPosition.VISITED.value
         self.update_cell(x, y, self.maze[y][x])
+        time.sleep(self.config.delay)
+        self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
         while stack:
             cx, cy = stack[-1]
             neighbors = self.__get_unvisited_neighbors(cx, cy, w, h)
@@ -52,6 +59,8 @@ class Backtracking(AlgorithmGenerator):
                 self.remove_wall(cx, cy, nx, ny)
                 self.update_cell(cx, cy, self.maze[cy][cx])
                 self.update_cell(nx, ny, self.maze[ny][nx])
+                time.sleep(self.config.delay)
+                self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
                 stack.append((nx, ny))
             else:
                 stack.pop()

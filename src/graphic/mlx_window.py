@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/23 09:48:35 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 09:50:35 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/26 14:41:43 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -23,7 +23,9 @@ class MlxWindow:
         self.mlx: Mlx = Mlx()
         self.mlx_ptr: Any = self.mlx.mlx_init()
         self.config: Config = config
-        width, height, self.scale = self.get_window_size()
+        width, height, scale = self.get_window_size()
+        print("window size :")
+        print(f"height = '{height}', width = '{width}', scale = '{scale}'")
         self.window = self.mlx.mlx_new_window(
             self.mlx_ptr, width, height, title
         )
@@ -37,8 +39,14 @@ class MlxWindow:
         self.mlx.mlx_key_hook(
             self.window, MlxEventHandler.manage_key_simple, self.mlx_var
         )
+        self.mlx.mlx_key_hook(
+            self.window, MlxEventHandler.print_key, self.mlx_var
+        )
         self.mlx.mlx_hook(
             self.window, 33, 0, MlxEventHandler.manage_close, self.mlx_var
+        )
+        self.mlx.mlx_mouse_hook(
+            self.window, MlxEventHandler.show_mouse_position, self.mlx_var
         )
         self.ui_manager.setup_mouse_hooks()
 
@@ -66,6 +74,18 @@ class MlxEventHandler:
     @staticmethod
     def manage_close(mlx_var: MlxVar) -> None:
         mlx_var.mlx.mlx_loop_exit(mlx_var.mlx_ptr)
+
+    @staticmethod
+    def show_mouse_position(
+        button: int, x: int, y: int, mlx_var: MlxVar
+    ) -> None:
+        print(f"Got mouse : {button} at {x}x{y}")
+
+    @staticmethod
+    def print_key(
+        key: int, mlx_var: MlxVar
+    ) -> None:
+        print(f"Got key : {key}")
 
     @staticmethod
     def manage_key_simple(key: int, mlx_var: MlxVar) -> None:

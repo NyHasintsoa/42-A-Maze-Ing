@@ -14,16 +14,20 @@ SRCS_DIR := src
 ALROGITHM_DIR := $(SRCS_DIR)/algorithm
 EXCEPTIONS_DIR := $(SRCS_DIR)/exception
 SERVICE_DIR := $(SRCS_DIR)/service
+GRAPHIC_DIR := $(SRCS_DIR)/graphic
 
 SRCS_ALGORITHM := __init__.py algorithm_generator.py \
-				backtracking.py prims.py
-SRCS_SERVICE := __init__.py config_parser.py maze_resolver.py
+				backtracking.py prim.py maze_resolver.py
+SRCS_SERVICE := __init__.py config_parser.py generator_utils.py
 SRCS_EXCEPTION := __init__.py config_exception.py maze_exception.py \
-				args_exception.py
+				args_exception.py mlx_exception.py
+SRCS_GRAPHIC := __init__.py mlx_utils.py mlx_window.py ui_manager.py \
+				ui/mlx_component.py ui/mlx_button.py ui/mlx_panel.py
 
 SRCS := $(addprefix $(ALROGITHM_DIR)/, $(SRCS_ALGORITHM)) \
 	$(addprefix $(SERVICE_DIR)/, $(SRCS_SERVICE)) \
 	$(addprefix $(EXCEPTIONS_DIR)/, $(SRCS_EXCEPTION)) \
+	$(addprefix $(GRAPHIC_DIR)/, $(SRCS_GRAPHIC)) \
 	$(SRCS_DIR)/maze_generator.py \
 	$(SRCS_DIR)/__init__.py
 

@@ -8,7 +8,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/17 00:07:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/27 11:17:48 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/27 13:11:03 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -16,8 +16,19 @@
 import sys
 from src.exception import ArgsException, ConfigException, MlxException
 from src.service import ConfigParser, Config, FileGenerator
-from src.graphic import MlxWindow, MlxButton
+from src.graphic import MlxWindow, MlxButton, MlxVar
 from src.algorithm import Prim, MazeResolver
+
+
+def regenerate_maze(config: Config, mlx_var: MlxVar) -> None:
+    algo = Prim(config, mlx_var)
+    algo.init_maze()
+    result = algo.generate()
+    algo.render_maze_to_mlx()
+    resolver = MazeResolver(config, result)
+    path = resolver.solve()
+    file_generator = FileGenerator(config, result, path)
+    file_generator.generate_output()
 
 
 def main() -> None:
@@ -37,7 +48,7 @@ def main() -> None:
         bg_color=0xFFFF9500,
         text_color=0xFFFFFFFF,
     )
-    button.on_click = lambda: print("Button clicked! 🎉")
+    button.on_click = lambda config, mlx_var: regenerate_maze(config, mlx_var)
     ui_manager.add_component(button)
     ui_manager.render_components()
     algo = Prim(config, mlx_window.mlx_var)

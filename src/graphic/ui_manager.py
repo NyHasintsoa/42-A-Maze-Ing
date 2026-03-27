@@ -6,19 +6,21 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/25 16:06:29 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 09:50:12 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/27 13:02:16 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 from typing import Dict
 from src.graphic.ui.mlx_component import MlxComponent
 from src.graphic.mlx_utils import MlxVar
+from src.service import Config
 
 
 class UIManager:
-    def __init__(self, mlx_var: MlxVar) -> None:
+    def __init__(self, mlx_var: MlxVar, config: Config) -> None:
         self.components: Dict[str, MlxComponent] = {}
         self.mlx_var = mlx_var
+        self.config = config
 
     def setup_mouse_hooks(self) -> None:
         self.mlx_var.mlx.mlx_mouse_hook(
@@ -35,7 +37,7 @@ class UIManager:
                 component.is_point_inside(x, y)
                 and component.on_click
             ):
-                component.on_click()
+                component.on_click(self.config, mlx_var)
                 break
 
     def add_component(self, component: MlxComponent) -> None:

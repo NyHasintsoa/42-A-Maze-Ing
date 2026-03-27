@@ -6,13 +6,14 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/25 18:34:13 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 09:53:43 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/27 13:01:26 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 from abc import ABC, abstractmethod
 from typing import Callable, Optional
 from src.graphic.mlx_utils import MlxVar
+from src.service import Config
 import random
 
 
@@ -27,7 +28,7 @@ class MlxComponent(ABC):
         self.pos_y = pos_y
         self.width = width
         self.height = height
-        self.on_click: Optional[Callable[[], None]]
+        self.on_click: Optional[Callable[[Config, MlxVar], None]]
         self.bg_ptr = None
 
     @abstractmethod

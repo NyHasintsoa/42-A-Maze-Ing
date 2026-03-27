@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/23 09:48:35 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 14:41:43 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/27 12:57:37 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -33,7 +33,7 @@ class MlxWindow:
             raise MlxException("Can't create main window")
         self.mlx.mlx_clear_window(self.mlx_ptr, self.window)
         self.mlx_var = MlxVar(self.mlx, self.mlx_ptr, self.window)
-        self.ui_manager = UIManager(self.mlx_var)
+        self.ui_manager = UIManager(self.mlx_var, config)
 
     def add_event_hook(self) -> None:
         self.mlx.mlx_key_hook(

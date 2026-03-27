@@ -11,6 +11,7 @@ dist
 **/mazegen-1.0.0-py3-none-any.whl
 output.txt
 src/mazegen.egg-info
+output_validator.py
 
 ### VS Code ###
 .vscode/

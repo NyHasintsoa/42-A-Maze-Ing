@@ -85,6 +85,9 @@ lint-strict: $(VENV)
 	$(FLAKE8) .
 	$(MYPY) . --strict
 
+.PHONY: re
+re: clean $(NAME)
+
 #----------------------------------------------
 # Other Commands
 #----------------------------------------------

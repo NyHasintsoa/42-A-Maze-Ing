@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 21:31:32 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 16:08:09 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/27 11:25:27 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -154,6 +154,10 @@ to read '{self.config_path}'.")
         if entry_x == exit_x and entry_y == exit_y:
             raise ConfigException(
                 "Entry and Exit coordinates must be different"
+            )
+        if self.__config.height < 5 and self.__config.width:
+            raise ConfigException(
+                "Maze size (height, width) must greater or equal to 15"
             )
 
     def validate_coordonates(self, coordonates: Tuple[int, int]) -> bool:

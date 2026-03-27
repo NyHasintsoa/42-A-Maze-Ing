@@ -8,14 +8,14 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/17 00:07:46 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 17:52:15 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/27 11:17:48 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 
 import sys
 from src.exception import ArgsException, ConfigException, MlxException
-from src.service import ConfigParser, Config
+from src.service import ConfigParser, Config, FileGenerator
 from src.graphic import MlxWindow, MlxButton
 from src.algorithm import Prim, MazeResolver
 
@@ -26,7 +26,6 @@ def main() -> None:
     config_parser = ConfigParser(sys.argv[1])
     config_parser.parse()
     config: Config = config_parser.get_config()
-    print(f"config = {config.__dict__}")
     mlx_window = MlxWindow(config, "A-Maze-Ing")
     ui_manager = mlx_window.ui_manager
     mlx_window.add_event_hook()
@@ -44,25 +43,22 @@ def main() -> None:
     algo = Prim(config, mlx_window.mlx_var)
     algo.init_maze()
     result = algo.generate()
-    for y in result:
-        for x in y:
-            print(f"{x}", end=' ')
-        print()
-    algo.make_non_perfect()
-    print("after making non perfect")
-    for y in result:
-        for x in y:
-            print(f"{x}", end=' ')
-        print()
+    # algo.make_non_perfect()
+    # print("after making non perfect")
+    # for y in result:
+    #     for x in y:
+    #         print(f"{x}", end=' ')
+    #     print()
     algo.render_maze_to_mlx()
     resolver = MazeResolver(config, result)
-    print(f"resolver = {resolver.solve()}")
+    path = resolver.solve()
+    file_generator = FileGenerator(config, result, path)
+    file_generator.generate_output()
     mlx_window.render()
     mlx_window.close_window()
 
 
 if __name__ == "__main__":
-    print("Full Connextion")
     try:
         main()
     except ArgsException as e:

@@ -6,24 +6,33 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 22:04:11 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 18:04:46 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/29 19:02:07 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 from src.service import Config, BitPosition
 from src.graphic.mlx_utils import MlxVar
 from abc import ABC, abstractmethod
-from typing import List, Dict, Tuple, Any
+from typing import List, Dict, Optional, Tuple, Any
 import struct
 import random
 import time
 
 
 class AlgorithmGenerator(ABC):
-    def __init__(self, config: Config, mlx_var: MlxVar) -> None:
-        self.config: Config = config
-        self.mlx_var: MlxVar = mlx_var
-        self.maze: List[List[int]] = []
+    _instance: Optional['AlgorithmGenerator'] = None
+
+    def __new__(cls, *args: Any, **kwargs: Any) -> 'AlgorithmGenerator':
+        if cls._instance is None:
+            cls._instance = super(AlgorithmGenerator, cls).__new__(cls)
+        return cls._instance
+
+    def __init__(self, config: 'Config', mlx_var: 'MlxVar') -> None:
+        if not hasattr(self, "_initialized"):
+            self.config: 'Config' = config
+            self.mlx_var: 'MlxVar' = mlx_var
+            self.maze: List[List[int]] = []
+            self._initialized = True
 
     @abstractmethod
     def generate(self) -> List[List[int]]:
@@ -41,8 +50,10 @@ class AlgorithmGenerator(ABC):
     def init_maze(self) -> List[List[int]]:
         self.maze.clear()
         full_connections = (
-            BitPosition.NORTH.value | BitPosition.EAST.value |
-            BitPosition.SOUTH.value | BitPosition.WEST.value
+            BitPosition.NORTH.value
+            | BitPosition.EAST.value
+            | BitPosition.SOUTH.value
+            | BitPosition.WEST.value
         )
         for _ in range(self.config.height):
             self.maze.append(
@@ -75,9 +86,9 @@ class AlgorithmGenerator(ABC):
     def remove_wall(self, x1: int, y1: int, x2: int, y2: int) -> None:
         directions: Dict[Tuple[int, int], Tuple[Any, Any]] = {
             (0, -1): (BitPosition.NORTH.value, BitPosition.SOUTH.value),
-            (0, 1):  (BitPosition.SOUTH.value, BitPosition.NORTH.value),
-            (-1, 0): (BitPosition.WEST.value,  BitPosition.EAST.value),
-            (1, 0):  (BitPosition.EAST.value,  BitPosition.WEST.value),
+            (0, 1): (BitPosition.SOUTH.value, BitPosition.NORTH.value),
+            (-1, 0): (BitPosition.WEST.value, BitPosition.EAST.value),
+            (1, 0): (BitPosition.EAST.value, BitPosition.WEST.value),
         }
 
         delta = (x2 - x1, y2 - y1)
@@ -102,7 +113,7 @@ class AlgorithmGenerator(ABC):
                 (0, -1, BitPosition.NORTH.value, BitPosition.SOUTH.value),
                 (1, 0, BitPosition.EAST.value, BitPosition.WEST.value),
                 (0, 1, BitPosition.SOUTH.value, BitPosition.NORTH.value),
-                (-1, 0, BitPosition.WEST.value, BitPosition.EAST.value)
+                (-1, 0, BitPosition.WEST.value, BitPosition.EAST.value),
             ]
             random.shuffle(neighbors)
 
@@ -110,10 +121,9 @@ class AlgorithmGenerator(ABC):
                 nx, ny = cx + dx, cy + dy
                 if not (0 <= nx < w and 0 <= ny < h):
                     continue
-                if not (self.maze[cy][cx] & bit_curr) \
-                        and (
-                            self.maze[ny][nx] != 16 and self.maze[cy][cx] != 16
-                        ):
+                if not (self.maze[cy][cx] & bit_curr) and (
+                    self.maze[ny][nx] != 16 and self.maze[cy][cx] != 16
+                ):
                     self.maze[cy][cx] |= bit_curr
                     self.maze[ny][nx] |= bit_neigh
                     loops_added += 1
@@ -149,10 +159,10 @@ class AlgorithmGenerator(ABC):
         self, dx: int, dy: int, scale: int, border: int, mask: int
     ) -> bool:
         return (
-            (dy < border and not (mask & BitPosition.NORTH.value)) or
-            (dx >= scale - border and not (mask & BitPosition.EAST.value)) or
-            (dy >= scale - border and not (mask & BitPosition.SOUTH.value)) or
-            (dx < border and not (mask & BitPosition.WEST.value))
+            (dy < border and not (mask & BitPosition.NORTH.value))
+            or (dx >= scale - border and not (mask & BitPosition.EAST.value))
+            or (dy >= scale - border and not (mask & BitPosition.SOUTH.value))
+            or (dx < border and not (mask & BitPosition.WEST.value))
         )
 
     def update_cell(self, mx: int, my: int, mask: int) -> None:
@@ -166,18 +176,24 @@ class AlgorithmGenerator(ABC):
                 color_bytes = wall_bytes if is_wall else bg_bytes
                 color_int = struct.unpack("<I", color_bytes)[0]
                 self.mlx_var.mlx.mlx_pixel_put(
-                    self.mlx_var.mlx_ptr, self.mlx_var.window,
-                    (mx * scale) + dx, (my * scale) + dy, color_int
+                    self.mlx_var.mlx_ptr,
+                    self.mlx_var.window,
+                    (mx * scale) + dx,
+                    (my * scale) + dy,
+                    color_int,
                 )
 
     def render_maze_to_mlx(self) -> None:
         scale, border = self._get_render_params()
-        img = self.mlx_var.mlx.mlx_new_image(
-            self.mlx_var.mlx_ptr,
-            self.config.width * scale,
-            self.config.height * scale
+        if not self.mlx_var.maze_img:
+            self.mlx_var.maze_img = self.mlx_var.mlx.mlx_new_image(
+                self.mlx_var.mlx_ptr,
+                self.config.width * scale,
+                self.config.height * scale,
+            )
+        data, _, sl, _ = self.mlx_var.mlx.mlx_get_data_addr(
+            self.mlx_var.maze_img
         )
-        data, _, sl, _ = self.mlx_var.mlx.mlx_get_data_addr(img)
         wall_bytes = struct.pack("<I", self.config.colors[3].get(1, 0x000000))
 
         for my in range(self.config.height):
@@ -194,10 +210,11 @@ class AlgorithmGenerator(ABC):
                         is_wall = self._is_wall(dx, dy, scale, border, mask)
                         off = row_off + (cell_x_off + dx) * 4
                         if off + 4 <= len(data):
-                            data[off:off+4] = wall_bytes \
+                            data[off: off + 4] = wall_bytes \
                                     if is_wall else bg_bytes
 
         self.mlx_var.mlx.mlx_put_image_to_window(
-            self.mlx_var.mlx_ptr, self.mlx_var.window, img, 0, 0
+            self.mlx_var.mlx_ptr, self.mlx_var.window,
+            self.mlx_var.maze_img, 0, 0
         )
         time.sleep(self.config.delay)

@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/27 10:59:09 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/27 11:18:41 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/29 16:04:44 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -47,7 +47,8 @@ class FileGenerator:
                 f.write("\n")
                 f.write(f"{self.config.entry[0]},{self.config.entry[1]}\n")
                 f.write(f"{self.config.exit[0]},{self.config.exit[1]}\n")
-                f.write(f"{"".join(self.resolver)}\n")
+                path_str: str = "".join(self.resolver)
+                f.write(f"{path_str}\n")
             return True
         except Exception:
             return False

@@ -6,11 +6,10 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/25 18:42:50 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 09:32:30 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/29 17:23:18 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from typing import Any
 from src.graphic.ui.mlx_component import MlxComponent
 from src.exception import MlxException
 
@@ -30,10 +29,10 @@ class MlxButton(MlxComponent):
         self.text = text
         self.bg_color = bg_color
         self.text_color = text_color
-        self.bg_ptr: Any
 
     def render(self) -> None:
-        self._create_bg_image()
+        if not self.bg_ptr:
+            self._create_bg_image()
         self.mlx_var.mlx.mlx_put_image_to_window(
             self.mlx_var.mlx_ptr, self.mlx_var.window,
             self.bg_ptr, self.pos_x, self.pos_y

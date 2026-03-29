@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 21:31:32 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/27 11:25:27 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/29 17:31:01 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -81,9 +81,9 @@ class Config:
 class ConfigParser:
     def __init__(self, config_path: str) -> None:
         self.config_path: str = config_path
-        self.__config: Config = Config()
+        self._config: Config = Config()
 
-    def __apply_config(self, config: Dict[str, str]) -> None:
+    def _apply_config(self, config: Dict[str, str]) -> None:
         def str_to_bool(name: str, value: str) -> bool:
             if value not in ["True", "False"]:
                 raise ConfigException(f"Invalid value for '{name}': '{value}' \
@@ -102,7 +102,7 @@ class ConfigParser:
             "algorithm": lambda v: AlgorithmType(v.lower())
         }
         for name, value in config.items():
-            if not hasattr(self.__config, name):
+            if not hasattr(self._config, name):
                 raise ConfigException(
                     f"Unknown configuration option: '{name}'"
                 )
@@ -110,7 +110,7 @@ class ConfigParser:
                 continue
             try:
                 parsed_value = parsers[name](value)
-                setattr(self.__config, name, parsed_value)
+                setattr(self._config, name, parsed_value)
             except (ValueError, KeyError):
                 raise ConfigException(f"Invalid value for '{name}': {value}")
 
@@ -141,21 +141,21 @@ to read '{self.config_path}'.")
             raise ConfigException(
                 f"An error occurred while parsing the configuration: {e}"
             )
-        self.__apply_config(config)
+        self._apply_config(config)
         return config
 
     def validate_config(self) -> None:
-        if not (self.validate_coordonates(self.__config.entry)):
+        if not (self.validate_coordonates(self._config.entry)):
             raise ConfigException("Entry coordinates not in Size")
-        if not (self.validate_coordonates(self.__config.exit)):
+        if not (self.validate_coordonates(self._config.exit)):
             raise ConfigException("Exit coordinates not in Size")
-        entry_x, entry_y = self.__config.entry
-        exit_x, exit_y = self.__config.exit
+        entry_x, entry_y = self._config.entry
+        exit_x, exit_y = self._config.exit
         if entry_x == exit_x and entry_y == exit_y:
             raise ConfigException(
                 "Entry and Exit coordinates must be different"
             )
-        if self.__config.height < 5 and self.__config.width:
+        if self._config.height < 5 and self._config.width:
             raise ConfigException(
                 "Maze size (height, width) must greater or equal to 15"
             )
@@ -163,10 +163,10 @@ to read '{self.config_path}'.")
     def validate_coordonates(self, coordonates: Tuple[int, int]) -> bool:
         x, y = coordonates
         return (
-            (0 <= x < self.__config.width)
-            and (0 <= y < self.__config.height)
+            (0 <= x < self._config.width)
+            and (0 <= y < self._config.height)
         )
 
     def get_config(self) -> Config:
         self.validate_config()
-        return self.__config
+        return self._config

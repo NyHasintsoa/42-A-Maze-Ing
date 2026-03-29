@@ -6,11 +6,11 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/25 18:37:05 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/26 09:24:09 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/29 16:55:34 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
-from typing import Any
+from typing import Any, Optional
 from mlx import Mlx
 
 
@@ -19,3 +19,5 @@ class MlxVar:
         self.mlx: Mlx = mlx
         self.mlx_ptr: Any = mlx_ptr
         self.window: Any = window
+        self.maze_img: Optional[Any] = None
+        self.path_img: Optional[Any] = None

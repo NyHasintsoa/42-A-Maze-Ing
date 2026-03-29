@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 22:04:11 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/29 19:33:21 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/29 19:41:19 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -32,7 +32,13 @@ class AlgorithmGenerator(ABC):
             self.config: "Config" = config
             self.mlx_var: "MlxVar" = mlx_var
             self.maze: List[List[int]] = []
+            self.palette_idx: int = 0
             self._initialized = True
+
+    def set_palette(self, palette_idx: int) -> None:
+        if not (0 <= palette_idx < len(self.config.colors)):
+            raise ValueError("Invalid palette index")
+        self.palette_idx = palette_idx
 
     @abstractmethod
     def generate(self) -> List[List[int]]:
@@ -158,10 +164,20 @@ class AlgorithmGenerator(ABC):
         return cells
 
     def render_path_to_mlx(
-        self, path: List[str], color: int = 0xFF0000
+        self, path: List[str], palette_idx: int | None = None
     ) -> None:
         if not path:
             return
+
+        if palette_idx is None:
+            palette_idx = self.palette_idx
+
+        if not (0 <= palette_idx < len(self.config.colors)):
+            palette_idx = 0
+
+        self.set_palette(palette_idx)
+        path_color = self.config.colors[palette_idx].get(5, 0xFFFF0000)
+
         coords = self._get_path_cells(path)
         scale, _ = self._get_render_params()
         radius = max(1, scale // 4)
@@ -181,7 +197,7 @@ class AlgorithmGenerator(ABC):
                             self.mlx_var.window,
                             px,
                             py,
-                            color,
+                            path_color,
                         )
         self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
         self.mlx_var.path_coords = coords
@@ -195,8 +211,12 @@ class AlgorithmGenerator(ABC):
         self.mlx_var.path_coords = None
 
     def _get_cell_color(
-        self, mx: int, my: int, mask: int, palette_idx: int = 0
+        self, mx: int, my: int, mask: int, palette_idx: int | None = None
     ) -> bytes:
+        if palette_idx is None:
+            palette_idx = self.palette_idx
+        if not (0 <= palette_idx < len(self.config.colors)):
+            palette_idx = 0
         palette = self.config.colors[palette_idx]
 
         def to_bytes(c_idx: int, default: int) -> bytes:

@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 21:33:54 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/29 17:58:30 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/29 19:33:34 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -29,8 +29,9 @@ class Prim(AlgorithmGenerator):
         frontier: List[Tuple[int, int, int, int]] = []
         self.maze[sy][sx] |= BitPosition.VISITED.value
         self.update_cell(sx, sy, self.maze[sy][sx])
-        time.sleep(self.config.delay)
-        self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
+        if self.config.animation:
+            time.sleep(self.config.delay)
+            self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
         self._add_to_frontier(sx, sy, frontier)
         while frontier:
             idx = random.randrange(len(frontier))
@@ -39,11 +40,13 @@ class Prim(AlgorithmGenerator):
                 self.remove_wall(cx, cy, nx, ny)
                 self.maze[ny][nx] |= BitPosition.VISITED.value
                 self.update_cell(cx, cy, self.maze[cy][cx])
-                time.sleep(self.config.delay)
-                self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
+                if self.config.animation:
+                    time.sleep(self.config.delay)
+                    self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
                 self.update_cell(nx, ny, self.maze[ny][nx])
-                time.sleep(self.config.delay)
-                self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
+                if self.config.animation:
+                    time.sleep(self.config.delay)
+                    self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
                 self._add_to_frontier(nx, ny, frontier)
         return self.maze
 

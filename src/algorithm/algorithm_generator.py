@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 22:04:11 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/29 19:02:07 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/29 19:33:21 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -20,17 +20,17 @@ import time
 
 
 class AlgorithmGenerator(ABC):
-    _instance: Optional['AlgorithmGenerator'] = None
+    _instance: Optional["AlgorithmGenerator"] = None
 
-    def __new__(cls, *args: Any, **kwargs: Any) -> 'AlgorithmGenerator':
+    def __new__(cls, *args: Any, **kwargs: Any) -> "AlgorithmGenerator":
         if cls._instance is None:
             cls._instance = super(AlgorithmGenerator, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, config: 'Config', mlx_var: 'MlxVar') -> None:
+    def __init__(self, config: "Config", mlx_var: "MlxVar") -> None:
         if not hasattr(self, "_initialized"):
-            self.config: 'Config' = config
-            self.mlx_var: 'MlxVar' = mlx_var
+            self.config: "Config" = config
+            self.mlx_var: "MlxVar" = mlx_var
             self.maze: List[List[int]] = []
             self._initialized = True
 
@@ -139,6 +139,61 @@ class AlgorithmGenerator(ABC):
         scale = min(scale_x, scale_y, 16)
         return scale, max(1, scale // 5)
 
+    def _get_path_cells(self, path: List[str]) -> List[Tuple[int, int]]:
+        x, y = self.config.entry
+        cells = [(x, y)]
+        movement = {
+            "N": (0, -1),
+            "E": (1, 0),
+            "S": (0, 1),
+            "W": (-1, 0),
+        }
+        for direction in path:
+            if direction in movement:
+                dx, dy = movement[direction]
+                x += dx
+                y += dy
+                if 0 <= x < self.config.width and 0 <= y < self.config.height:
+                    cells.append((x, y))
+        return cells
+
+    def render_path_to_mlx(
+        self, path: List[str], color: int = 0xFF0000
+    ) -> None:
+        if not path:
+            return
+        coords = self._get_path_cells(path)
+        scale, _ = self._get_render_params()
+        radius = max(1, scale // 4)
+        for cx, cy in coords:
+            center_x = cx * scale + scale // 2
+            center_y = cy * scale + scale // 2
+            for dy in range(-radius, radius + 1):
+                for dx in range(-radius, radius + 1):
+                    px = center_x + dx
+                    py = center_y + dy
+                    if (
+                        0 <= px < self.config.width * scale
+                        and 0 <= py < self.config.height * scale
+                    ):
+                        self.mlx_var.mlx.mlx_pixel_put(
+                            self.mlx_var.mlx_ptr,
+                            self.mlx_var.window,
+                            px,
+                            py,
+                            color,
+                        )
+        self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
+        self.mlx_var.path_coords = coords
+        self.mlx_var.is_path_visible = True
+
+    def clear_path(self) -> None:
+        if not self.mlx_var.is_path_visible:
+            return
+        self.render_maze_to_mlx()
+        self.mlx_var.is_path_visible = False
+        self.mlx_var.path_coords = None
+
     def _get_cell_color(
         self, mx: int, my: int, mask: int, palette_idx: int = 0
     ) -> bytes:
@@ -211,10 +266,12 @@ class AlgorithmGenerator(ABC):
                         off = row_off + (cell_x_off + dx) * 4
                         if off + 4 <= len(data):
                             data[off: off + 4] = wall_bytes \
-                                    if is_wall else bg_bytes
+                                if is_wall else bg_bytes
 
         self.mlx_var.mlx.mlx_put_image_to_window(
             self.mlx_var.mlx_ptr, self.mlx_var.window,
             self.mlx_var.maze_img, 0, 0
         )
-        time.sleep(self.config.delay)
+        if self.config.animation:
+            time.sleep(self.config.delay)
+            self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)

@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/25 18:37:05 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/29 16:55:34 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/29 19:08:30 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -21,3 +21,5 @@ class MlxVar:
         self.window: Any = window
         self.maze_img: Optional[Any] = None
         self.path_img: Optional[Any] = None
+        self.path_coords: Optional[list[tuple[int, int]]] = None
+        self.is_path_visible: bool = False

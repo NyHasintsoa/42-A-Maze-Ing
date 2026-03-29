@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/25 16:06:29 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/29 17:40:22 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/29 19:50:19 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -37,13 +37,10 @@ class UIManager:
                 component.is_point_inside(x, y)
                 and component.on_click
             ):
-                self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
-                self.mlx_var.mlx.mlx_clear_window(
-                    mlx_var.mlx_ptr, mlx_var.window
-                )
-                self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
-                self.render_components()
-                component.on_click(self.config, mlx_var)
+                try:
+                    component.on_click(self.config, mlx_var)
+                finally:
+                    self.render_components()
                 break
 
     def add_component(self, component: MlxComponent) -> None:

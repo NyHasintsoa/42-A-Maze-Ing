@@ -6,7 +6,7 @@
 #  By: nramalan <nramalan@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/03/21 22:04:11 by nramalan        #+#    #+#               #
-#  Updated: 2026/03/29 19:41:19 by nramalan        ###   ########.fr        #
+#  Updated: 2026/03/29 19:50:19 by nramalan        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
@@ -180,7 +180,8 @@ class AlgorithmGenerator(ABC):
 
         coords = self._get_path_cells(path)
         scale, _ = self._get_render_params()
-        radius = max(1, scale // 4)
+        radius = max(1, scale // 8)
+
         for cx, cy in coords:
             center_x = cx * scale + scale // 2
             center_y = cy * scale + scale // 2
@@ -206,7 +207,15 @@ class AlgorithmGenerator(ABC):
     def clear_path(self) -> None:
         if not self.mlx_var.is_path_visible:
             return
-        self.render_maze_to_mlx()
+        if self.mlx_var.maze_img:
+            self.mlx_var.mlx.mlx_put_image_to_window(
+                self.mlx_var.mlx_ptr,
+                self.mlx_var.window,
+                self.mlx_var.maze_img,
+                0,
+                0,
+            )
+        self.mlx_var.mlx.mlx_do_sync(self.mlx_var.mlx_ptr)
         self.mlx_var.is_path_visible = False
         self.mlx_var.path_coords = None
 

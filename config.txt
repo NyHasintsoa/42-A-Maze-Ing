@@ -25,6 +25,6 @@ EXIT=49,49
 #-------------------------------------------------------
 OUTPUT_FILE=maze.txt
 PERFECT=False
-ANIMATION=False
+ANIMATION=True
 SEED=0
 #-------------------------------------------------------
